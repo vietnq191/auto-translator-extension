@@ -1,0 +1,16 @@
+{
+  "name": "auto-translator",
+  "version": "0.1.0",
+  "description": "Browser extension that translates web pages and video captions in real time",
+  "type": "module",
+  "scripts": {
+    "dev": "node build.mjs --watch",
+    "build": "tsc --noEmit && node build.mjs"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.268",
+    "@types/node": "^20.19.41",
+    "esbuild": "^0.28.0",
+    "typescript": "^5.4.0"
+  }
+}

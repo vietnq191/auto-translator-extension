@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Auto Translator</title>
+    <style>
+      :root {
+        --bg: #0d0f14;
+        --card: #161922;
+        --border: #262b38;
+        --text: #e7e9ee;
+        --muted: #8b90a0;
+        --accent: #ef4444;
+        --accent-2: #f59e0b;
+        --on: #22c55e;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        width: 320px;
+        margin: 0;
+        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+        background: var(--bg);
+        color: var(--text);
+      }
+      .app {
+        padding: 16px;
+      }
+
+      /* Header */
+      .header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .logo {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        font-size: 14px;
+        color: #fff;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      }
+      .title {
+        font-size: 15px;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+      .subtitle {
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      /* Control row (toggle / select) */
+      .control {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 14px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        margin-bottom: 12px;
+      }
+      .control-label {
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .select {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 7px 10px;
+        color: var(--text);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .select:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+
+      /* Toggle switch */
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 44px;
+        height: 26px;
+        flex-shrink: 0;
+      }
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .slider {
+        position: absolute;
+        inset: 0;
+        cursor: pointer;
+        background: #333947;
+        border-radius: 999px;
+        transition: 0.2s;
+      }
+      .slider::before {
+        content: '';
+        position: absolute;
+        height: 20px;
+        width: 20px;
+        left: 3px;
+        top: 3px;
+        background: #fff;
+        border-radius: 50%;
+        transition: 0.2s;
+      }
+      .switch input:checked + .slider {
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      }
+      .switch input:checked + .slider::before {
+        transform: translateX(18px);
+      }
+
+      /* Live caption panel */
+      .panel {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px;
+        min-height: 96px;
+      }
+      .panel-head {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 10px;
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #4b5060;
+      }
+      .dot.live {
+        background: var(--on);
+        box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18);
+      }
+      .vi {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1.4;
+        min-height: 22px;
+      }
+      .vi.empty {
+        color: var(--muted);
+        font-weight: 400;
+        font-size: 13px;
+      }
+      .en {
+        margin-top: 6px;
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.4;
+      }
+      .export {
+        width: 100%;
+        margin-top: 12px;
+        border: none;
+        border-radius: 12px;
+        padding: 12px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #fff;
+        cursor: pointer;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      }
+      .export:disabled {
+        opacity: 0.6;
+        cursor: default;
+      }
+      .export-msg {
+        margin-top: 8px;
+        font-size: 11px;
+        color: var(--muted);
+        text-align: center;
+        min-height: 14px;
+      }
+      .footer {
+        margin-top: 12px;
+        font-size: 11px;
+        color: var(--muted);
+        text-align: center;
+        line-height: 1.4;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <header class="header">
+        <div class="logo">
+          <svg width="24" height="24" viewBox="0 0 128 128" fill="none" stroke="#fff" stroke-width="11" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M34 50 H86" />
+            <path d="M74 38 L88 50 L74 62" />
+            <path d="M94 78 H42" />
+            <path d="M54 66 L40 78 L54 90" />
+          </svg>
+        </div>
+        <div>
+          <div class="title">Auto Translator</div>
+          <div class="subtitle">Dịch trực tiếp trang web &amp; phụ đề</div>
+        </div>
+      </header>
+
+      <div class="control">
+        <span class="control-label">Bật dịch</span>
+        <label class="switch">
+          <input type="checkbox" id="toggle" />
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="control">
+        <span class="control-label">Dịch sang</span>
+        <select class="select" id="lang"></select>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <span class="dot" id="dot"></span>
+          <span id="status">Đang tắt</span>
+        </div>
+        <div class="vi empty" id="vi">Bản dịch sẽ hiện ở đây…</div>
+        <div class="en" id="en"></div>
+      </div>
+
+      <button class="export" id="export">Xuất transcript (.md)</button>
+      <div class="export-msg" id="export-msg"></div>
+
+      <footer class="footer">Mở video YouTube và bật phụ đề (CC) để xem bản dịch.</footer>
+    </div>
+    <script src="popup.js"></script>
+  </body>
+</html>
